@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IT Asset Assigned / Gate Pass Automation</title>
   
-  <!-- CDNs for PDF & Icons -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Direct Accurate PDF Generation Engines -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
   <style>
@@ -260,23 +261,22 @@
       gap: 20px;
     }
 
-    /* Standard A4 Paper Style */
+    /* Standard A4 Paper Style (Exact dimensions) */
     .a4-page {
       width: 210mm;
       min-width: 210mm;
-      height: 295mm;
-      max-height: 295mm;
-      background: #ffffff;
+      height: 297mm;
+      max-height: 297mm;
+      background: #ffffff !important;
       box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-      padding: 12mm 16mm;
+      padding: 14mm 16mm;
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       color: #000;
+      box-sizing: border-box;
       overflow: hidden;
-      page-break-after: always;
-      page-break-inside: avoid;
     }
 
     .doc-top-right {
@@ -355,7 +355,7 @@
       border: 1.5px solid #000;
       display: flex;
       flex-direction: column;
-      height: 400px; /* Reduced to guarantee no overflow */
+      height: 420px;
     }
 
     .item-table {
@@ -463,10 +463,10 @@
         box-shadow: none !important;
         margin: 0 !important;
         width: 210mm !important;
-        height: 295mm !important;
+        height: 297mm !important;
         page-break-after: always !important;
         page-break-inside: avoid !important;
-        padding: 12mm 16mm !important;
+        padding: 14mm 16mm !important;
       }
     }
   </style>
@@ -859,62 +859,62 @@
       return curDateStr || '27-09-2026';
     }
 
-    /* COMPLETELY FIXED PDF EXPORT (NO DARK BACKGROUND, NO EXTRA PAGE) */
-    function downloadPDF() {
-      const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.pdf`;
+    /* DIRECT PRECISE PDF GENERATOR (NO CUTTING, NO BLEEDING, EXACT 1 PAGE) */
+    async function downloadPDF() {
+      const btn = document.querySelector('.btn-pdf');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
+      btn.disabled = true;
 
-      // 1. Create a clean isolated container with pure white background
-      const cleanContainer = document.createElement('div');
-      cleanContainer.style.background = '#ffffff';
-      cleanContainer.style.margin = '0';
-      cleanContainer.style.padding = '0';
-      cleanContainer.style.width = '210mm';
+      try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
 
-      // 2. Clone each A4 page into cleanContainer without any UI wrapper styles
-      const pagesList = document.querySelectorAll('.a4-page');
-      pagesList.forEach((pg, index) => {
-        const clone = pg.cloneNode(true);
-        clone.style.boxShadow = 'none';
-        clone.style.margin = '0';
-        clone.style.width = '210mm';
-        clone.style.height = '295mm';
-        clone.style.maxHeight = '295mm';
-        clone.style.padding = '12mm 16mm';
-        clone.style.background = '#ffffff';
-        clone.style.boxSizing = 'border-box';
-        clone.style.overflow = 'hidden';
+        const pageElements = document.querySelectorAll('.a4-page');
+        const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.pdf`;
 
-        if (index < pagesList.length - 1) {
-          clone.style.pageBreakAfter = 'always';
-        } else {
-          clone.style.pageBreakAfter = 'avoid';
+        for (let i = 0; i < pageElements.length; i++) {
+          const pageEl = pageElements[i];
+
+          // Temporarily disable shadow to capture pure white paper
+          const origShadow = pageEl.style.boxShadow;
+          pageEl.style.boxShadow = 'none';
+
+          const canvas = await html2canvas(pageEl, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false
+          });
+
+          pageEl.style.boxShadow = origShadow;
+
+          const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+          if (i > 0) {
+            pdf.addPage('a4', 'portrait');
+          }
+          // Exact A4 Canvas Mapping (210mm x 297mm)
+          pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
         }
-        cleanContainer.appendChild(clone);
-      });
 
-      // 3. Temporarily mount to document body (off-screen)
-      cleanContainer.style.position = 'fixed';
-      cleanContainer.style.top = '-99999px';
-      cleanContainer.style.left = '0';
-      document.body.appendChild(cleanContainer);
-
-      const opt = {
-        margin:       0,
-        filename:     filename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, scrollY: 0, background: '#ffffff' },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(cleanContainer).save().then(() => {
-        document.body.removeChild(cleanContainer);
-      });
+        pdf.save(filename);
+      } catch (err) {
+        console.error(err);
+        alert("PDF তৈরিতে সমস্যা হয়েছে। দয়া করে Print বাটন ব্যবহার করুন।");
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
     }
 
     // Word Download
     function downloadWord() {
       const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.doc`;
-      
       let pagesHtml = '';
 
       pages.forEach((p, idx) => {
