@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Asset Assigned / Gate Pass Automation</title>
+  
+  <!-- CDNs for PDF & Icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1e40af;
+      --bg-dark: #cbd5e1;
+      --panel: #ffffff;
+      --border: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* LEFT CONTROLS PANEL */
+    .form-container {
+      width: 440px;
+      min-width: 420px;
+      height: 100%;
+      background: var(--panel);
+      border-right: 2px solid #64748b;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 4px 0 12px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+
+    .form-header {
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 15px;
+    }
+
+    .form-header h2 {
+      font-size: 18px;
+      color: #0f172a;
+    }
+
+    /* Page Switcher Tabs */
+    .page-switcher {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #f1f5f9;
+      padding: 6px;
+      border-radius: 6px;
+    }
+
+    .tab-btn {
+      padding: 6px 12px;
+      background: #e2e8f0;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-add-page {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-delete-page {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    /* Section Styles */
+    .form-section {
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 15px;
+    }
+
+    .form-section h3 {
+      font-size: 13px;
+      color: #334155;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: bold;
+      color: #475569;
+      margin-bottom: 3px;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* Dynamic Item Rows */
+    .item-input-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .item-input-card .row-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #64748b;
+    }
+
+    .item-input-card textarea {
+      width: 100%;
+      font-size: 12px;
+      padding: 4px 6px;
+      margin-bottom: 4px;
+      border: 1px solid #cbd5e1;
+      border-radius: 3px;
+      resize: vertical;
+    }
+
+    .item-input-card .row-bottom {
+      display: grid;
+      grid-template-columns: 1fr 2fr 30px;
+      gap: 6px;
+    }
+
+    .btn-del-item {
+      background: #fee2e2;
+      color: #ef4444;
+      border: 1px solid #fca5a5;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn-add-item {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Bottom Actions */
+    .action-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding-top: 10px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    .btn-action-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .btn-pdf { background: #dc2626; color: white; }
+    .btn-word { background: #2563eb; color: white; }
+
+    /* RIGHT SIDE PREVIEW (Exact match of provided image) */
+    .preview-container {
+      flex: 1;
+      height: 100%;
+      background: #52525b;
+      overflow: auto;
+      padding: 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 30px;
+    }
+
+    /* Standard A4 Paper Style */
+    .a4-page {
+      width: 210mm;
+      min-width: 210mm;
+      height: 297mm;
+      min-height: 297mm;
+      background: #ffffff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      padding: 18mm 20mm;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #000;
+    }
+
+    /* Gate Pass No Top Right Box */
+    .doc-top-right {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .gate-pass-box {
+      border: 1.5px solid #000;
+      padding: 5px 22px;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Header text */
+    .doc-header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .doc-header h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 2px;
+    }
+
+    .doc-header .address {
+      font-size: 12px;
+      color: #000;
+      margin-bottom: 2px;
+    }
+
+    .doc-header .hotline {
+      font-size: 12px;
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .badge-bar {
+      background-color: #000;
+      color: #fff;
+      display: inline-block;
+      padding: 2px 25px;
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .dept-title {
+      font-size: 13.5px;
+      font-weight: bold;
+    }
+
+    /* Meta Table */
+    .meta-table {
+      width: 100%;
+      margin: 15px 0 10px 0;
+      font-size: 13px;
+      border-collapse: collapse;
+    }
+
+    .meta-table td {
+      padding: 2.5px 0;
+    }
+
+    .meta-table td.label {
+      width: 14%;
+    }
+
+    .meta-table td.val {
+      width: 36%;
+      font-weight: normal;
+    }
+
+    /* Table Matching Screenshot */
+    .table-title {
+      font-size: 12.5px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .main-table-wrapper {
+      border: 1.5px solid #000;
+      display: flex;
+      flex-direction: column;
+      height: 480px; /* Fixed height matching the exact screenshot ratio */
+    }
+
+    .item-table {
+      width: 100%;
+      border-collapse: collapse;
+      height: 100%;
+    }
+
+    .item-table th {
+      border-bottom: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      padding: 5px 6px;
+      font-size: 12.5px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .item-table th:last-child {
+      border-right: none;
+    }
+
+    .item-table td {
+      border-right: 1.5px solid #000;
+      padding: 6px 8px;
+      font-size: 12px;
+      vertical-align: top;
+    }
+
+    .item-table td:last-child {
+      border-right: none;
+    }
+
+    .col-sl { width: 7%; text-align: center; font-weight: bold; }
+    .col-details { width: 53%; font-weight: bold; line-height: 1.35; }
+    .col-qty { width: 10%; text-align: center; font-weight: bold; }
+    .col-purpose { width: 30%; }
+
+    /* Filler Row takes remaining height */
+    .filler-row td {
+      height: 100%;
+    }
+
+    /* Total row at bottom */
+    .total-row {
+      border-top: 1.5px solid #000;
+      height: 25px;
+    }
+
+    .total-row td {
+      border-right: 1.5px solid #000;
+      font-weight: bold;
+      font-size: 12.5px;
+      padding: 3px 6px;
+    }
+
+    .notice-line {
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .remarks-section {
+      margin-top: 15px;
+      font-size: 12px;
+      min-height: 60px;
+    }
+
+    .remarks-label {
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    /* Signatures Bottom */
+    .signature-area {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sig-box {
+      width: 120px;
+      border-top: 1.5px solid #000;
+      text-align: center;
+      font-size: 12.5px;
+      padding-top: 3px;
+    }
+
+    @media print {
+      body { background: none; overflow: visible; display: block; }
+      .form-container { display: none !important; }
+      .preview-container { padding: 0 !important; background: none !important; display: block !important; }
+      .a4-page { box-shadow: none !important; margin: 0 0 20px 0 !important; page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT CONTROL FORM -->
+  <div class="form-container">
+    <div class="form-header">
+      <h2><i class="fa-solid fa-file-invoice"></i> Gate Pass Generator</h2>
+      <p style="font-size: 11px; color: #64748b; margin-top: 2px;">প্রতিটি পেজের তথ্য আলাদাভাবে এডিট করতে পারবেন।</p>
+    </div>
+
+    <!-- Page Switcher Tabs -->
+    <div class="page-switcher">
+      <div id="page-tabs-container" style="display:flex; gap: 4px;"></div>
+      <button class="btn-add-page" onclick="addNewPage()" title="নতুন পেজ যোগ করুন"><i class="fa fa-plus"></i> Add Page</button>
+      <button class="btn-delete-page" onclick="deleteCurrentPage()" title="বর্তমান পেজ মুছুন"><i class="fa fa-trash"></i></button>
+    </div>
+
+    <!-- Page Info -->
+    <div class="form-section">
+      <h3>1. Document & Pass Info</h3>
+      <div class="form-group">
+        <label>Gate pass- No:</label>
+        <input type="text" id="inp_gatepass" oninput="saveCurrentData()">
+      </div>
+    </div>
+
+    <!-- Employee & Location -->
+    <div class="form-section">
+      <h3>2. Personnel & Branch Details</h3>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Workplace:</label>
+          <input type="text" id="inp_workplace" oninput="saveCurrentData()">
+        </div>
+        <div class="form-group">
+          <label>Date:</label>
+          <input type="text" id="inp_date" oninput="saveCurrentData()">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Emp ID:</label>
+          <input type="text" id="inp_empid" oninput="saveCurrentData()">
+        </div>
+        <div class="form-group">
+          <label>Emp Name:</label>
+          <input type="text" id="inp_empname" oninput="saveCurrentData()">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Designation:</label>
+          <input type="text" id="inp_desig" oninput="saveCurrentData()">
+        </div>
+        <div class="form-group">
+          <label>Department:</label>
+          <input type="text" id="inp_dept" oninput="saveCurrentData()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Items -->
+    <div class="form-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3>3. Dynamic Item Details</h3>
+      </div>
+      <div id="item-input-list"></div>
+      <button class="btn-add-item" onclick="addItem()"><i class="fa fa-plus-circle"></i> Add Item Row</button>
+    </div>
+
+    <!-- Remarks -->
+    <div class="form-section">
+      <h3>4. Remarks</h3>
+      <div class="form-group">
+        <textarea id="inp_remarks" rows="2" placeholder="Remarks..." oninput="saveCurrentData()"></textarea>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-bar">
+      <div class="btn-action-group">
+        <button class="btn-action btn-pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+        <button class="btn-action btn-word" onclick="downloadWord()"><i class="fa-solid fa-file-word"></i> Download Word</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT LIVE PREVIEW (MATCHES SCREENSHOT WITH CBE-001 & CBE-002) -->
+  <div class="preview-container" id="preview-container">
+    <!-- Rendered dynamically -->
+  </div>
+
+  <script>
+    // Initial pages loaded directly matching your screenshot example
+    let pages = [
+      {
+        gatepass: "CBE-001",
+        workplace: "Rangamati-Sadar",
+        date: "2026-09-27",
+        empid: "CL-84977",
+        empname: "Jana Prio Chakma",
+        desig: "Associate",
+        dept: "Hub Operations (OSD)",
+        remarks: "",
+        items: [
+          {
+            details: "HP Probook 440 G8, i5 11th Gen, RAM 16GB, SSD 512 GB, 14-inch, SN# 5CD1159L99, BSN# 5CD1159L99 & TN# CBE-IT-LAPTOP-0475",
+            qty: 1,
+            purpose: "New"
+          },
+          {
+            details: "Laptop Charger",
+            qty: 1,
+            purpose: ""
+          },
+          {
+            details: "Headphone, Logitech-H111, TN# CBE-IT-Headphone-120",
+            qty: 1,
+            purpose: ""
+          }
+        ]
+      },
+      {
+        gatepass: "CBE-002",
+        workplace: "Rangamati-Sadar",
+        date: "2026-09-27",
+        empid: "CL-84977",
+        empname: "Jana Prio Chakma",
+        desig: "Associate",
+        dept: "Hub Operations (OSD)",
+        remarks: "",
+        items: [
+          {
+            details: "HP Probook 440 G8, i5 11th Gen, RAM 16GB, SSD 512 GB, 14-inch, SN# 5CD1159L99, BSN# 5CD1159L99 & TN# CBE-IT-LAPTOP-0475",
+            qty: 1,
+            purpose: "New"
+          },
+          {
+            details: "Laptop Charger",
+            qty: 1,
+            purpose: ""
+          }
+        ]
+      }
+    ];
+
+    let activePageIndex = 0;
+
+    // Load active page into left form inputs
+    function loadForm() {
+      const p = pages[activePageIndex];
+      document.getElementById('inp_gatepass').value = p.gatepass;
+      document.getElementById('inp_workplace').value = p.workplace;
+      document.getElementById('inp_date').value = p.date;
+      document.getElementById('inp_empid').value = p.empid;
+      document.getElementById('inp_empname').value = p.empname;
+      document.getElementById('inp_desig').value = p.desig;
+      document.getElementById('inp_dept').value = p.dept;
+      document.getElementById('inp_remarks').value = p.remarks || '';
+
+      renderPageTabs();
+      renderItemInputs();
+      renderPreview();
+    }
+
+    // Save left form changes to active page model
+    function saveCurrentData() {
+      const p = pages[activePageIndex];
+      p.gatepass = document.getElementById('inp_gatepass').value;
+      p.workplace = document.getElementById('inp_workplace').value;
+      p.date = document.getElementById('inp_date').value;
+      p.empid = document.getElementById('inp_empid').value;
+      p.empname = document.getElementById('inp_empname').value;
+      p.desig = document.getElementById('inp_desig').value;
+      p.dept = document.getElementById('inp_dept').value;
+      p.remarks = document.getElementById('inp_remarks').value;
+
+      renderPreview();
+      renderPageTabs();
+    }
+
+    // Render Page Selection Tabs
+    function renderPageTabs() {
+      const container = document.getElementById('page-tabs-container');
+      container.innerHTML = '';
+      pages.forEach((p, index) => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${index === activePageIndex ? 'active' : ''}`;
+        btn.innerText = `P${index + 1} (${p.gatepass || '...' })`;
+        btn.onclick = () => {
+          activePageIndex = index;
+          loadForm();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // Add New Page
+    function addNewPage() {
+      const nextNum = pages.length + 1;
+      const formattedNum = String(nextNum).padStart(3, '0');
+      pages.push({
+        gatepass: `CBE-${formattedNum}`,
+        workplace: pages[activePageIndex].workplace || "Rangamati-Sadar",
+        date: pages[activePageIndex].date || "2026-09-27",
+        empid: pages[activePageIndex].empid || "",
+        empname: pages[activePageIndex].empname || "",
+        desig: pages[activePageIndex].desig || "",
+        dept: pages[activePageIndex].dept || "",
+        remarks: "",
+        items: [{ details: "", qty: 1, purpose: "" }]
+      });
+      activePageIndex = pages.length - 1;
+      loadForm();
+    }
+
+    // Delete Current Page
+    function deleteCurrentPage() {
+      if (pages.length <= 1) {
+        alert("কমপক্ষে ১টি পেজ থাকতে হবে!");
+        return;
+      }
+      if (confirm(`আপনি কি পেজ ${activePageIndex + 1} মুছে ফেলতে চান?`)) {
+        pages.splice(activePageIndex, 1);
+        activePageIndex = Math.max(0, activePageIndex - 1);
+        loadForm();
+      }
+    }
+
+    // Render Item Inputs in Left Sidebar
+    function renderItemInputs() {
+      const list = document.getElementById('item-input-list');
+      list.innerHTML = '';
+      pages[activePageIndex].items.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'item-input-card';
+        card.innerHTML = `
+          <div class="row-top">
+            <span>SL: ${String(idx + 1).padStart(2, '0')}</span>
+            <button class="btn-del-item" onclick="deleteItem(${idx})"><i class="fa fa-times"></i></button>
+          </div>
+          <textarea rows="2" placeholder="IT Asset Details..." oninput="updateItem(${idx}, 'details', this.value)">${item.details}</textarea>
+          <div class="row-bottom">
+            <input type="number" min="1" placeholder="Qty" value="${item.qty}" oninput="updateItem(${idx}, 'qty', this.value)">
+            <input type="text" placeholder="Purpose (e.g. New)" value="${item.purpose}" oninput="updateItem(${idx}, 'purpose', this.value)">
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function addItem() {
+      pages[activePageIndex].items.push({ details: '', qty: 1, purpose: '' });
+      renderItemInputs();
+      renderPreview();
+    }
+
+    function deleteItem(idx) {
+      if (pages[activePageIndex].items.length <= 1) {
+        alert("কমপক্ষে ১টি আইটেম থাকা আবশ্যক!");
+        return;
+      }
+      pages[activePageIndex].items.splice(idx, 1);
+      renderItemInputs();
+      renderPreview();
+    }
+
+    function updateItem(idx, key, value) {
+      pages[activePageIndex].items[idx][key] = value;
+      renderPreview();
+    }
+
+    // Render Preview Pages Side-by-Side
+    function renderPreview() {
+      const container = document.getElementById('preview-container');
+      container.innerHTML = '';
+
+      pages.forEach((page, pIdx) => {
+        let totalQty = 0;
+        let itemRowsHtml = '';
+
+        page.items.forEach((item, idx) => {
+          const q = parseInt(item.qty) || 0;
+          totalQty += q;
+          const sl = String(idx + 1).padStart(2, '0');
+          itemRowsHtml += `
+            <tr>
+              <td class="col-sl">${sl}</td>
+              <td class="col-details">${item.details || '&nbsp;'}</td>
+              <td class="col-qty">${item.qty || '0'}</td>
+              <td class="col-purpose">${item.purpose || '&nbsp;'}</td>
+            </tr>
+          `;
+        });
+
+        const pageHtml = `
+          <div class="a4-page" id="render-page-${pIdx}">
+            <div>
+              <!-- Top Right Box -->
+              <div class="doc-top-right">
+                <div class="gate-pass-box">
+                  Gate pass- No: ${page.gatepass || ''}
+                </div>
+              </div>
+
+              <!-- Header -->
+              <div class="doc-header">
+                <h1>CarryBee Express Ltd.</h1>
+                <div class="address">House 97, Soharwardi Avenue, Baridhara Diplomatic Zone, Dhaka 1212</div>
+                <div class="hotline">IT Hotline: 01701208286</div>
+                <div><span class="badge-bar">IT Asset Assigned / Gate Pass Form</span></div>
+                <div class="dept-title">IT & Infrastructure Department</div>
+              </div>
+
+              <!-- Info Rows -->
+              <table class="meta-table">
+                <tr>
+                  <td class="label">Workplace:</td>
+                  <td class="val">${page.workplace || ''}</td>
+                  <td class="label">Date:</td>
+                  <td class="val">${page.date || ''}</td>
+                </tr>
+                <tr>
+                  <td class="label">Emp ID:</td>
+                  <td class="val">${page.empid || ''}</td>
+                  <td class="label">Emp Name:</td>
+                  <td class="val">${page.empname || ''}</td>
+                </tr>
+                <tr>
+                  <td class="label">Designation:</td>
+                  <td class="val">${page.desig || ''}</td>
+                  <td class="label">Department:</td>
+                  <td class="val">${page.dept || ''}</td>
+                </tr>
+              </table>
+
+              <!-- Main Table with fixed height and continuing vertical lines -->
+              <div class="table-title">Item Details:</div>
+              <div class="main-table-wrapper">
+                <table class="item-table">
+                  <thead>
+                    <tr>
+                      <th class="col-sl">SL.</th>
+                      <th class="col-details">IT Asset Details</th>
+                      <th class="col-qty">Qty</th>
+                      <th class="col-purpose">Purpose</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${itemRowsHtml}
+                    <!-- Filler row to extend borders to the bottom like the screenshot -->
+                    <tr class="filler-row">
+                      <td class="col-sl"></td>
+                      <td class="col-details"></td>
+                      <td class="col-qty"></td>
+                      <td class="col-purpose"></td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr class="total-row">
+                      <td colspan="2" style="text-align: right; padding-right: 12px;">Total</td>
+                      <td class="col-qty" style="text-align: center;">${totalQty}</td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="notice-line">NB: Please acknowledge by (email: it@carrybee.com) upon item received.</div>
+
+              <div class="remarks-section">
+                <span class="remarks-label">Remarks:</span> ${page.remarks || ''}
+              </div>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signature-area">
+              <div class="sig-box">Prepared By</div>
+              <div class="sig-box">Authorized by</div>
+              <div class="sig-box">Received by</div>
+            </div>
+          </div>
+        `;
+        container.innerHTML += pageHtml;
+      });
+    }
+
+    // Date formatting helper for Filename
+    function getFilenameDate() {
+      const curDateStr = pages[0].date || '';
+      // If YYYY-MM-DD convert to DD-MM-YYYY
+      const parts = curDateStr.split('-');
+      if(parts.length === 3 && parts[0].length === 4) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return curDateStr || '27-09-2026';
+    }
+
+    // PDF Download function
+    function downloadPDF() {
+      const element = document.getElementById('preview-container');
+      const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.pdf`;
+
+      const opt = {
+        margin:       0,
+        filename:     filename,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // Word Download function
+    function downloadWord() {
+      const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.doc`;
+      const content = document.getElementById('preview-container').innerHTML;
+
+      const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                            xmlns:w='urn:schemas-microsoft-com:office:word' 
+                            xmlns='http://www.w3.org/TR/REC-html40'>
+                      <head><meta charset='utf-8'><title>Gate Pass</title>
+                      <style>
+                        body { font-family: Arial, sans-serif; font-size: 10pt; }
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid #000; padding: 4px; }
+                        .a4-page { page-break-after: always; margin-bottom: 30px; }
+                      </style></head><body>`;
+      const footer = "</body></html>";
+      const sourceHTML = header + content + footer;
+
+      const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      const fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = filename;
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+    }
+
+    // Start App
+    loadForm();
+  </script>
+</body>
+</html>
