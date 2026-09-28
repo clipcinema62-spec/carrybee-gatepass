@@ -12,7 +12,7 @@
   <style>
     :root {
       --primary: #1e40af;
-      --bg-dark: #475569;
+      --bg-dark: #334155;
       --panel: #ffffff;
       --border: #94a3b8;
     }
@@ -33,46 +33,46 @@
 
     /* LEFT CONTROLS PANEL */
     .form-container {
-      width: 440px;
-      min-width: 420px;
+      width: 430px;
+      min-width: 410px;
       height: 100%;
       background: var(--panel);
-      border-right: 2px solid #334155;
-      padding: 18px;
+      border-right: 2px solid #1e293b;
+      padding: 16px;
       overflow-y: auto;
-      box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+      box-shadow: 4px 0 15px rgba(0,0,0,0.25);
       z-index: 10;
     }
 
     .form-header {
-      padding-bottom: 10px;
+      padding-bottom: 8px;
       border-bottom: 2px solid #e2e8f0;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .form-header h2 {
-      font-size: 18px;
+      font-size: 17px;
       color: #0f172a;
     }
 
     /* Page Switcher Tabs */
     .page-switcher {
       display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 5px;
+      margin-bottom: 10px;
       align-items: center;
       flex-wrap: wrap;
       background: #f1f5f9;
-      padding: 6px;
-      border-radius: 6px;
+      padding: 5px;
+      border-radius: 5px;
     }
 
     .tab-btn {
-      padding: 5px 10px;
+      padding: 4px 8px;
       background: #e2e8f0;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -87,9 +87,9 @@
       background: #10b981;
       color: white;
       border: none;
-      padding: 5px 9px;
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 11.5px;
+      font-size: 11px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -98,9 +98,9 @@
       background: #f59e0b;
       color: white;
       border: none;
-      padding: 5px 8px;
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 11.5px;
+      font-size: 11px;
       cursor: pointer;
       font-weight: bold;
       margin-left: auto;
@@ -110,23 +110,23 @@
       background: #ef4444;
       color: white;
       border: none;
-      padding: 5px 8px;
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 11.5px;
+      font-size: 11px;
       cursor: pointer;
     }
 
-    /* Form Fields */
+    /* Form Section */
     .form-section {
       background: #f8fafc;
-      padding: 10px 12px;
+      padding: 10px;
       border-radius: 6px;
       border: 1px solid #e2e8f0;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .form-section h3 {
-      font-size: 12px;
+      font-size: 11.5px;
       color: #334155;
       text-transform: uppercase;
       margin-bottom: 6px;
@@ -135,7 +135,7 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .form-group {
@@ -152,13 +152,13 @@
 
     .form-group input, .form-group textarea {
       width: 100%;
-      padding: 6px 8px;
+      padding: 5px 7px;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 11.5px;
     }
 
-    /* Dynamic Item Rows */
+    /* Item Cards */
     .item-input-card {
       background: #ffffff;
       border: 1px solid #cbd5e1;
@@ -170,15 +170,15 @@
     .item-input-card .row-top {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 4px;
-      font-size: 11px;
+      margin-bottom: 3px;
+      font-size: 10.5px;
       font-weight: bold;
       color: #64748b;
     }
 
     .item-input-card textarea {
       width: 100%;
-      font-size: 12px;
+      font-size: 11.5px;
       padding: 4px 6px;
       margin-bottom: 4px;
       border: 1px solid #cbd5e1;
@@ -188,8 +188,8 @@
 
     .item-input-card .row-bottom {
       display: grid;
-      grid-template-columns: 1fr 2fr 30px;
-      gap: 6px;
+      grid-template-columns: 1fr 2fr 28px;
+      gap: 5px;
     }
 
     .btn-del-item {
@@ -207,12 +207,12 @@
       border: none;
       padding: 6px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    /* Actions Panel */
+    /* Bottom Actions */
     .action-bar {
       display: flex;
       flex-direction: column;
@@ -227,7 +227,7 @@
     .btn-action-group {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
+      gap: 5px;
     }
 
     .btn-action {
@@ -239,99 +239,101 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      font-size: 11.5px;
-      text-align: center;
+      gap: 4px;
+      font-size: 11px;
     }
 
     .btn-print { background: #059669; color: white; }
     .btn-pdf { background: #dc2626; color: white; }
     .btn-word { background: #2563eb; color: white; }
 
-    /* RIGHT LIVE PREVIEW */
+    /* RIGHT PREVIEW CANVAS */
     .preview-container {
       flex: 1;
       height: 100%;
-      background: #334155;
+      background: #1e293b;
       overflow: auto;
-      padding: 25px;
+      padding: 20px;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-      gap: 25px;
+      gap: 20px;
     }
 
-    /* Standard A4 Paper Style */
+    /* Standard A4 Paper Style (Exact dimensions to strictly fit in 1 page) */
     .a4-page {
       width: 210mm;
       min-width: 210mm;
-      height: 297mm;
-      min-height: 297mm;
+      height: 295mm; /* strictly constrained to 295mm to prevent 2nd page in PDF */
+      max-height: 295mm;
       background: #ffffff;
       box-shadow: 0 4px 18px rgba(0,0,0,0.5);
-      padding: 16mm 18mm;
+      padding: 12mm 16mm;
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       color: #000;
+      overflow: hidden;
+      page-break-after: always;
+      page-break-inside: avoid;
     }
 
     .doc-top-right {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .gate-pass-box {
       border: 1.5px solid #000;
-      padding: 4px 20px;
+      padding: 3px 18px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14.5px;
     }
 
     .doc-header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .doc-header h1 {
-      font-size: 24px;
+      font-size: 23px;
       font-weight: bold;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
 
     .doc-header .address {
-      font-size: 11.5px;
-      margin-bottom: 2px;
+      font-size: 11px;
+      margin-bottom: 1px;
     }
 
     .doc-header .hotline {
-      font-size: 11.5px;
+      font-size: 11px;
       font-style: italic;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .badge-bar {
       background-color: #000;
       color: #fff;
       display: inline-block;
-      padding: 2px 22px;
+      padding: 2px 20px;
       font-weight: bold;
-      font-size: 13.5px;
-      margin-bottom: 4px;
+      font-size: 13px;
+      margin-bottom: 3px;
     }
 
     .dept-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: bold;
     }
 
     /* Meta Table */
     .meta-table {
       width: 100%;
-      margin: 12px 0 8px 0;
-      font-size: 12.5px;
+      margin: 10px 0 6px 0;
+      font-size: 12px;
       border-collapse: collapse;
     }
 
@@ -339,26 +341,21 @@
       padding: 2px 0;
     }
 
-    .meta-table td.label {
-      width: 14%;
-    }
-
-    .meta-table td.val {
-      width: 36%;
-    }
+    .meta-table td.label { width: 14%; }
+    .meta-table td.val { width: 36%; }
 
     /* Item Details Table */
     .table-title {
       font-size: 12px;
       font-weight: bold;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .main-table-wrapper {
       border: 1.5px solid #000;
       display: flex;
       flex-direction: column;
-      height: 480px;
+      height: 420px; /* Adjusted height so page never overflows */
     }
 
     .item-table {
@@ -382,7 +379,7 @@
 
     .item-table td {
       border-right: 1.5px solid #000;
-      padding: 6px 8px;
+      padding: 5px 8px;
       font-size: 11.5px;
       vertical-align: top;
     }
@@ -392,10 +389,11 @@
     }
 
     .col-sl { width: 7%; text-align: center; font-weight: bold; }
-    .col-details { width: 53%; font-weight: bold; line-height: 1.35; }
+    .col-details { width: 53%; font-weight: bold; line-height: 1.3; }
     .col-qty { width: 10%; text-align: center; font-weight: bold; }
     .col-purpose { width: 30%; }
 
+    /* One clean filler row */
     .filler-row td {
       height: 100%;
     }
@@ -418,9 +416,9 @@
     }
 
     .remarks-section {
-      margin-top: 12px;
-      font-size: 12px;
-      min-height: 50px;
+      margin-top: 10px;
+      font-size: 11.5px;
+      min-height: 40px;
     }
 
     .remarks-label {
@@ -432,7 +430,7 @@
     .signature-area {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .sig-box {
@@ -443,7 +441,7 @@
       padding-top: 3px;
     }
 
-    /* PRINT STYLES (NATIVE CLEAN A4 PRINT) */
+    /* Native Print */
     @media print {
       @page {
         size: A4 portrait;
@@ -454,23 +452,16 @@
         overflow: visible !important;
         display: block !important;
       }
-      .form-container {
-        display: none !important;
-      }
-      .preview-container {
-        padding: 0 !important;
-        background: white !important;
-        display: block !important;
-        overflow: visible !important;
-      }
+      .form-container { display: none !important; }
+      .preview-container { padding: 0 !important; background: white !important; display: block !important; overflow: visible !important; }
       .a4-page {
         box-shadow: none !important;
         margin: 0 !important;
         width: 210mm !important;
-        height: 296mm !important;
+        height: 295mm !important;
         page-break-after: always !important;
         page-break-inside: avoid !important;
-        padding: 15mm 18mm !important;
+        padding: 12mm 16mm !important;
       }
     }
   </style>
@@ -556,7 +547,7 @@
     <!-- Actions -->
     <div class="action-bar">
       <div class="btn-action-group">
-        <button class="btn-action btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Form</button>
+        <button class="btn-action btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
         <button class="btn-action btn-pdf" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
         <button class="btn-action btn-word" onclick="downloadWord()"><i class="fa-solid fa-file-word"></i> Word (.doc)</button>
       </div>
@@ -564,9 +555,7 @@
   </div>
 
   <!-- RIGHT LIVE PREVIEW -->
-  <div class="preview-container" id="preview-container">
-    <!-- Rendered dynamically -->
-  </div>
+  <div class="preview-container" id="preview-container"></div>
 
   <script>
     let pages = [
@@ -865,6 +854,7 @@
       return curDateStr || '27-09-2026';
     }
 
+    // PDF Download strictly constrained to 1 single page per gate pass
     function downloadPDF() {
       const element = document.getElementById('preview-container');
       const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.pdf`;
@@ -873,14 +863,15 @@
         margin:       0,
         filename:     filename,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['css', 'legacy'] }
       };
 
       html2pdf().set(opt).from(element).save();
     }
 
-    // NATIVE WORD GENERATOR (100% COMPATIBLE WITH MICROSOFT WORD)
+    // Word Download - NO EXTRA BOXES, ONE BIG CLEAN SPACE
     function downloadWord() {
       const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.doc`;
       
@@ -893,26 +884,24 @@
           const q = parseInt(item.qty) || 0;
           totalQty += q;
           itemRows += `
-            <tr style="height: 24pt;">
+            <tr style="height: 22pt;">
               <td align="center" style="border: 1pt solid black; font-weight: bold; width: 7%;">${String(itemIdx + 1).padStart(2, '0')}</td>
-              <td style="border: 1pt solid black; font-weight: bold; width: 53%; padding: 4pt 6pt;">${item.details || ''}</td>
+              <td style="border: 1pt solid black; font-weight: bold; width: 53%; padding: 3pt 5pt;">${item.details || ''}</td>
               <td align="center" style="border: 1pt solid black; font-weight: bold; width: 10%;">${item.qty || '0'}</td>
-              <td style="border: 1pt solid black; width: 30%; padding: 4pt 6pt;">${item.purpose || ''}</td>
+              <td style="border: 1pt solid black; width: 30%; padding: 3pt 5pt;">${item.purpose || ''}</td>
             </tr>
           `;
         });
 
-        // 7-8 Empty visual rows to maintain height in Word
-        for(let f = p.items.length; f < 10; f++) {
-          itemRows += `
-            <tr style="height: 25pt;">
-              <td style="border-left: 1pt solid black; border-right: 1pt solid black;"></td>
-              <td style="border-right: 1pt solid black;"></td>
-              <td style="border-right: 1pt solid black;"></td>
-              <td style="border-right: 1pt solid black;"></td>
-            </tr>
-          `;
-        }
+        // Single continuous blank filler row without intermediate horizontal borders
+        itemRows += `
+          <tr style="height: 230pt;">
+            <td style="border-left: 1pt solid black; border-right: 1pt solid black; border-top: none; border-bottom: none;">&nbsp;</td>
+            <td style="border-right: 1pt solid black; border-top: none; border-bottom: none;">&nbsp;</td>
+            <td style="border-right: 1pt solid black; border-top: none; border-bottom: none;">&nbsp;</td>
+            <td style="border-right: 1pt solid black; border-top: none; border-bottom: none;">&nbsp;</td>
+          </tr>
+        `;
 
         pagesHtml += `
           <div class="WordSection">
@@ -920,9 +909,9 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td align="right">
-                  <table border="1" cellspacing="0" cellpadding="4" style="border: 1.5pt solid black; border-collapse: collapse;">
+                  <table border="1" cellspacing="0" cellpadding="3" style="border: 1.5pt solid black; border-collapse: collapse;">
                     <tr>
-                      <td style="font-weight: bold; font-size: 11pt; padding: 3pt 15pt;">Gate pass- No: ${p.gatepass || ''}</td>
+                      <td style="font-weight: bold; font-size: 11pt; padding: 2pt 14pt;">Gate pass- No: ${p.gatepass || ''}</td>
                     </tr>
                   </table>
                 </td>
@@ -930,23 +919,23 @@
             </table>
 
             <!-- Header Titles -->
-            <div align="center" style="text-align: center; margin-top: 5pt;">
-              <h2 style="margin: 0; font-size: 18pt; font-family: Arial; font-weight: bold;">CarryBee Express Ltd.</h2>
-              <div style="font-size: 9.5pt; margin-top: 2pt;">House 97, Soharwardi Avenue, Baridhara Diplomatic Zone, Dhaka 1212</div>
-              <div style="font-size: 9.5pt; font-style: italic; margin-top: 2pt;">IT Hotline: 01701208286</div>
+            <div align="center" style="text-align: center; margin-top: 3pt;">
+              <h2 style="margin: 0; font-size: 17pt; font-family: Arial; font-weight: bold;">CarryBee Express Ltd.</h2>
+              <div style="font-size: 9pt; margin-top: 2pt;">House 97, Soharwardi Avenue, Baridhara Diplomatic Zone, Dhaka 1212</div>
+              <div style="font-size: 9pt; font-style: italic; margin-top: 1pt;">IT Hotline: 01701208286</div>
               
-              <table align="center" border="0" cellspacing="0" cellpadding="0" style="margin-top: 5pt; margin-bottom: 3pt;">
+              <table align="center" border="0" cellspacing="0" cellpadding="0" style="margin-top: 4pt; margin-bottom: 3pt;">
                 <tr>
-                  <td bgcolor="#000000" style="background: #000000; color: #ffffff; padding: 3pt 20pt; font-size: 11pt; font-weight: bold; text-align: center;">
+                  <td bgcolor="#000000" style="background: #000000; color: #ffffff; padding: 2pt 18pt; font-size: 10.5pt; font-weight: bold; text-align: center;">
                     IT Asset Assigned / Gate Pass Form
                   </td>
                 </tr>
               </table>
-              <div style="font-size: 10.5pt; font-weight: bold; margin-top: 2pt;">IT & Infrastructure Department</div>
+              <div style="font-size: 10pt; font-weight: bold; margin-top: 1pt;">IT & Infrastructure Department</div>
             </div>
 
-            <!-- Meta details (Border-free table) -->
-            <table width="100%" border="0" cellspacing="0" cellpadding="3" style="margin-top: 10pt; font-size: 10pt; font-family: Arial;">
+            <!-- Meta details -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="2" style="margin-top: 8pt; font-size: 9.5pt; font-family: Arial;">
               <tr>
                 <td width="15%">Workplace:</td>
                 <td width="35%"><b>${p.workplace || ''}</b></td>
@@ -968,10 +957,10 @@
             </table>
 
             <!-- Item Table -->
-            <div style="font-weight: bold; font-size: 9.5pt; margin-top: 10pt; margin-bottom: 3pt;">Item Details:</div>
-            <table width="100%" border="1" cellspacing="0" cellpadding="4" style="border-collapse: collapse; border: 1.5pt solid black; font-family: Arial; font-size: 9.5pt;">
+            <div style="font-weight: bold; font-size: 9.5pt; margin-top: 8pt; margin-bottom: 2pt;">Item Details:</div>
+            <table width="100%" cellpadding="3" cellspacing="0" style="border-collapse: collapse; font-family: Arial; font-size: 9pt;">
               <thead>
-                <tr style="height: 20pt; background: #fafafa;">
+                <tr style="height: 18pt; background: #fafafa;">
                   <th align="center" style="border: 1pt solid black; width: 7%;">SL.</th>
                   <th align="center" style="border: 1pt solid black; width: 53%;">IT Asset Details</th>
                   <th align="center" style="border: 1pt solid black; width: 10%;">Qty</th>
@@ -982,33 +971,33 @@
                 ${itemRows}
               </tbody>
               <tfoot>
-                <tr style="height: 20pt; font-weight: bold;">
-                  <td colspan="2" align="right" style="border: 1pt solid black; padding-right: 10pt;">Total</td>
+                <tr style="height: 18pt; font-weight: bold;">
+                  <td colspan="2" align="right" style="border: 1pt solid black; padding-right: 8pt;">Total</td>
                   <td align="center" style="border: 1pt solid black;">${totalQty}</td>
                   <td style="border: 1pt solid black;"></td>
                 </tr>
               </tfoot>
             </table>
 
-            <div style="font-size: 9pt; margin-top: 5pt; font-family: Arial;">NB: Please acknowledge by (email: it@carrybee.com) upon item received.</div>
+            <div style="font-size: 8.5pt; margin-top: 4pt; font-family: Arial;">NB: Please acknowledge by (email: it@carrybee.com) upon item received.</div>
 
-            <div style="margin-top: 15pt; font-size: 10pt; font-family: Arial;">
+            <div style="margin-top: 10pt; font-size: 9.5pt; font-family: Arial;">
               <b><i>Remarks:</i></b> ${p.remarks || ''}
             </div>
 
             <!-- Signatures Side-by-side using Table -->
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 55pt; font-family: Arial; font-size: 10pt;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 45pt; font-family: Arial; font-size: 9.5pt;">
               <tr>
                 <td align="center" width="30%">
-                  <div style="border-top: 1.5pt solid black; padding-top: 4pt; width: 130pt;">Prepared By</div>
+                  <div style="border-top: 1.5pt solid black; padding-top: 3pt; width: 120pt;">Prepared By</div>
                 </td>
                 <td width="5%"></td>
                 <td align="center" width="30%">
-                  <div style="border-top: 1.5pt solid black; padding-top: 4pt; width: 130pt;">Authorized by</div>
+                  <div style="border-top: 1.5pt solid black; padding-top: 3pt; width: 120pt;">Authorized by</div>
                 </td>
                 <td width="5%"></td>
                 <td align="center" width="30%">
-                  <div style="border-top: 1.5pt solid black; padding-top: 4pt; width: 130pt;">Received by</div>
+                  <div style="border-top: 1.5pt solid black; padding-top: 3pt; width: 120pt;">Received by</div>
                 </td>
               </tr>
             </table>
@@ -1027,7 +1016,7 @@
           <style>
             @page WordSection {
               size: 21.0cm 29.7cm;
-              margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+              margin: 1.2cm 1.5cm 1.2cm 1.5cm;
               mso-page-orientation: portrait;
             }
             div.WordSection { page: WordSection; }
