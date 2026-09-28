@@ -12,7 +12,7 @@
   <style>
     :root {
       --primary: #1e40af;
-      --bg-dark: #334155;
+      --bg-dark: #1e293b;
       --panel: #ffffff;
       --border: #94a3b8;
     }
@@ -37,10 +37,10 @@
       min-width: 410px;
       height: 100%;
       background: var(--panel);
-      border-right: 2px solid #1e293b;
+      border-right: 2px solid #0f172a;
       padding: 16px;
       overflow-y: auto;
-      box-shadow: 4px 0 15px rgba(0,0,0,0.25);
+      box-shadow: 4px 0 15px rgba(0,0,0,0.3);
       z-index: 10;
     }
 
@@ -260,11 +260,11 @@
       gap: 20px;
     }
 
-    /* Standard A4 Paper Style (Exact dimensions to strictly fit in 1 page) */
+    /* Standard A4 Paper Style */
     .a4-page {
       width: 210mm;
       min-width: 210mm;
-      height: 295mm; /* strictly constrained to 295mm to prevent 2nd page in PDF */
+      height: 295mm;
       max-height: 295mm;
       background: #ffffff;
       box-shadow: 0 4px 18px rgba(0,0,0,0.5);
@@ -355,7 +355,7 @@
       border: 1.5px solid #000;
       display: flex;
       flex-direction: column;
-      height: 420px; /* Adjusted height so page never overflows */
+      height: 400px; /* Reduced to guarantee no overflow */
     }
 
     .item-table {
@@ -393,7 +393,6 @@
     .col-qty { width: 10%; text-align: center; font-weight: bold; }
     .col-purpose { width: 30%; }
 
-    /* One clean filler row */
     .filler-row td {
       height: 100%;
     }
@@ -418,7 +417,7 @@
     .remarks-section {
       margin-top: 10px;
       font-size: 11.5px;
-      min-height: 40px;
+      min-height: 35px;
     }
 
     .remarks-label {
@@ -447,13 +446,19 @@
         size: A4 portrait;
         margin: 0;
       }
-      body {
-        background: white !important;
-        overflow: visible !important;
-        display: block !important;
+      body, html {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       .form-container { display: none !important; }
-      .preview-container { padding: 0 !important; background: white !important; display: block !important; overflow: visible !important; }
+      .preview-container { 
+        padding: 0 !important; 
+        margin: 0 !important;
+        background: #ffffff !important; 
+        display: block !important; 
+        overflow: visible !important; 
+      }
       .a4-page {
         box-shadow: none !important;
         margin: 0 !important;
@@ -472,7 +477,7 @@
   <div class="form-container">
     <div class="form-header">
       <h2><i class="fa-solid fa-file-invoice"></i> Gate Pass Generator</h2>
-      <p style="font-size: 11px; color: #64748b; margin-top: 2px;">ইনপুট পরিবর্তন করলে প্রিভিউ আপডেট হবে।</p>
+      <p style="font-size: 11px; color: #64748b; margin-top: 2px;">তথ্য পরিবর্তন করলে প্রিভিউ আপডেট হবে।</p>
     </div>
 
     <!-- Page Switcher Tabs -->
@@ -854,24 +859,59 @@
       return curDateStr || '27-09-2026';
     }
 
-    // PDF Download strictly constrained to 1 single page per gate pass
+    /* COMPLETELY FIXED PDF EXPORT (NO DARK BACKGROUND, NO EXTRA PAGE) */
     function downloadPDF() {
-      const element = document.getElementById('preview-container');
       const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.pdf`;
+
+      // 1. Create a clean isolated container with pure white background
+      const cleanContainer = document.createElement('div');
+      cleanContainer.style.background = '#ffffff';
+      cleanContainer.style.margin = '0';
+      cleanContainer.style.padding = '0';
+      cleanContainer.style.width = '210mm';
+
+      // 2. Clone each A4 page into cleanContainer without any UI wrapper styles
+      const pagesList = document.querySelectorAll('.a4-page');
+      pagesList.forEach((pg, index) => {
+        const clone = pg.cloneNode(true);
+        clone.style.boxShadow = 'none';
+        clone.style.margin = '0';
+        clone.style.width = '210mm';
+        clone.style.height = '295mm';
+        clone.style.maxHeight = '295mm';
+        clone.style.padding = '12mm 16mm';
+        clone.style.background = '#ffffff';
+        clone.style.boxSizing = 'border-box';
+        clone.style.overflow = 'hidden';
+
+        if (index < pagesList.length - 1) {
+          clone.style.pageBreakAfter = 'always';
+        } else {
+          clone.style.pageBreakAfter = 'avoid';
+        }
+        cleanContainer.appendChild(clone);
+      });
+
+      // 3. Temporarily mount to document body (off-screen)
+      cleanContainer.style.position = 'fixed';
+      cleanContainer.style.top = '-99999px';
+      cleanContainer.style.left = '0';
+      document.body.appendChild(cleanContainer);
 
       const opt = {
         margin:       0,
         filename:     filename,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['css', 'legacy'] }
+        html2canvas:  { scale: 2, useCORS: true, scrollY: 0, background: '#ffffff' },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(cleanContainer).save().then(() => {
+        document.body.removeChild(cleanContainer);
+      });
     }
 
-    // Word Download - NO EXTRA BOXES, ONE BIG CLEAN SPACE
+    // Word Download
     function downloadWord() {
       const filename = `IT Asset Assigned-Gate Pass Form - ${getFilenameDate()}.doc`;
       
@@ -893,7 +933,7 @@
           `;
         });
 
-        // Single continuous blank filler row without intermediate horizontal borders
+        // Single continuous blank filler row without intermediate horizontal lines
         itemRows += `
           <tr style="height: 230pt;">
             <td style="border-left: 1pt solid black; border-right: 1pt solid black; border-top: none; border-bottom: none;">&nbsp;</td>
